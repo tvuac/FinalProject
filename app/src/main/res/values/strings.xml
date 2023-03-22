@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Final Project</string>
+    <string name="app_name">Weather Forecast</string>
     <string name="hello_message">Hello world</string>
-    <string name="button_message">I\'m a button</string>
+    <string name="button_message">Search weather</string>
+    <string name="enter_location">Enter location</string>
+    <string name="hint_text">Enter location</string>
 </resources>
