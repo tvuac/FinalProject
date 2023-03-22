@@ -1,7 +1,9 @@
-package algonquin.cst2335.finalproject;
+package algonquin.cst2335.finalproject.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import algonquin.cst2335.finalproject.R;
 
 public class MainActivity extends AppCompatActivity {
 
