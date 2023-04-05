@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Final Project</string>
+    <string name="range">Enter Date From 1 to 1000</string>
+    <string name="enter">Enter Date Here</string>
+    <string name="search">search</string>
 </resources>
