@@ -6,21 +6,23 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/roverName"
         android:layout_width="161dp"
         android:layout_height="36dp"
         android:text="Name goes here"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></TextView>
+        app:layout_constraintTop_toTopOf="parent">
+    </TextView>
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/roverImage"
         android:layout_width="0dp"
         android:layout_height="123dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="parent"></ImageView>
+        app:layout_constraintStart_toEndOf="@+id/roverName"
+        app:layout_constraintTop_toTopOf="parent">
+    </ImageView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
