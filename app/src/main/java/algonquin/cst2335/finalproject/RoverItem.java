@@ -4,16 +4,23 @@ import android.graphics.Bitmap;
 
 public class RoverItem {
     private String roverName;
+    private String imgURL;
     private Bitmap image;
 
-    public RoverItem(String roverName, Bitmap image){
+    public RoverItem(String roverName, String imgURL){
         this.roverName = roverName;
-        this.image = image;
+        this.imgURL = imgURL;
     }
     public String getRoverName(){
         return roverName;
     }
     public Bitmap getImage(){
         return image;
+    }
+    public String getImgURL(){
+        return imgURL;
+    }
+    public void setImage(Bitmap image){
+        this.image = image;
     }
 }

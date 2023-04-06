@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import algonquin.cst2335.finalproject.databinding.NasaRowBinding;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyRowHolder> {
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private Context context;
     private ArrayList<RoverItem> roverItems;
 
@@ -22,29 +22,32 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyRowHolder> {
         this.context = context;
         this.roverItems = roverItems;
     }
-    public class MyRowHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView roverImage;
         TextView roverName;
-        public MyRowHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            roverImage = itemView.findViewById(R.id.roverImage);
+
             roverName = itemView.findViewById(R.id.roverName);
         }
     }
     @NonNull
     @Override
-    public MyRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.nasa_row,parent,false);
-        return new MyRowHolder(v);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyRowHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RoverItem rover = roverItems.get(position);
 
         holder.roverName.setText(rover.getRoverName());
-        holder.roverImage.setImageBitmap(rover.getImage());
+        if(rover.getImage() != null){
+            holder.roverImage.setImageBitmap(rover.getImage());
+        }
+
     }
 
     @Override

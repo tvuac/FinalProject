@@ -18,11 +18,10 @@
     <ImageView
         android:id="@+id/roverImage"
         android:layout_width="0dp"
-        android:layout_height="123dp"
+        android:layout_height="57dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/roverName"
-        app:layout_constraintTop_toTopOf="parent">
-    </ImageView>
+        app:layout_constraintTop_toTopOf="parent"></ImageView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
