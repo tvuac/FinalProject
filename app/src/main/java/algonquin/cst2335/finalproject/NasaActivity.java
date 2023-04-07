@@ -106,16 +106,16 @@ public class NasaActivity extends AppCompatActivity {
                                     1024,1024,ImageView.ScaleType.CENTER, null,
                                     (error) -> {});
                             queue.add(imgReq);
-                                roverList.add(rover);
-
+                            roverList.add(rover);
+                            runOnUiThread(() ->{
+                                myAdapter.notifyItemInserted(roverList.size()-1);
+                            });
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
                     },
                     (error) ->{});
             queue.add(request);
-            myAdapter.notifyItemInserted(roverList.size()-1);
-
         });
         class MyRowHolder extends RecyclerView.ViewHolder {
             TextView roverName;
