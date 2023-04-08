@@ -53,12 +53,17 @@ public class NasaActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RequestQueue queue;
     RoverItem rover;
+    RoverModel model;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNasaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        roverList = new ArrayList<RoverItem>();
+        model = new ViewModelProvider(this).get(RoverModel.class);
+        roverList = model.roverList.getValue();
+        if (roverList == null) {
+            model.roverList.postValue(roverList = new ArrayList<RoverItem>());
+        }
 //        model = new ViewModelProvider(this).get(RoverModel.class);
 //        roverList = model.roverList.getValue();
         recyclerView = binding.recycler;
@@ -69,68 +74,95 @@ public class NasaActivity extends AppCompatActivity {
 
         binding.search.setOnClickListener((clk) -> {
             date = binding.date.getText().toString();
-            String url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=" + date +
-                    "&api_key=zf1BVnH0bXnoSoQfq5RQdl39UKlyCHKXKOurI2TC";
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                    (response) -> {
-                        try {
-                            ArrayList<RoverItem> temp = new ArrayList<>();
-                            JSONArray photosArray = response.getJSONArray("photos");
-                            for (int i = 0; i < photosArray.length(); i++) {
-                                JSONObject position = photosArray.getJSONObject(i);
-                                JSONObject roverObject = position.getJSONObject("rover");
-                                String roverName = roverObject.getString("name");
-                                String imgURL = toHttps(position.getString("img_src"));
-                                temp.add(new RoverItem(roverName, imgURL));
-                            }
-                            for (RoverItem tempItem : temp) {
-                                String tempURL = tempItem.getImgURL();
-                                ImageRequest imgReq = new ImageRequest(tempURL,
-                                        (bitmap) -> {
-                                            Bitmap image;
-                                            String fileName = getFilename(tempURL);
-                                            try {
-                                                String pathname = getFilesDir() + "/" + fileName;
-                                                File file = new File(pathname);
-                                                if (file.exists()) {
-                                                    image = BitmapFactory.decodeFile(pathname);
-                                                    tempItem.setImage(image);
-                                                } else {
-                                                    image = bitmap;
-                                                    image.compress(Bitmap.CompressFormat.PNG, 100, NasaActivity.this.openFileOutput(
-                                                            fileName, Activity.MODE_PRIVATE));
-                                                    tempItem.setImage(image);
-                                                }
+            int numDate = Integer.valueOf(date);
+            if (validate(numDate)) {
+                String url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=" + date +
+                        "&api_key=zf1BVnH0bXnoSoQfq5RQdl39UKlyCHKXKOurI2TC";
+                Executor thread = Executors.newSingleThreadExecutor();
+                thread.execute(() -> {
+                    JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                            (response) -> {
+                                try {
+                                    ArrayList<RoverItem> temp = new ArrayList<>();
+                                    JSONArray photosArray = response.getJSONArray("photos");
+                                    for (int i = 0; i < photosArray.length(); i++) {
+                                        JSONObject position = photosArray.getJSONObject(i);
+                                        JSONObject roverObject = position.getJSONObject("rover");
+                                        JSONObject camera = position.getJSONObject("camera");
+                                        String roverName = "Rover Name: " + roverObject.getString("name");
+                                        String cameraName = "Camera Name: " + camera.getString("name");
+                                        String imgURL = toHttps(position.getString("img_src"));
+                                        temp.add(new RoverItem(roverName, imgURL, cameraName));
+                                    }
+                                    for (RoverItem tempItem : temp) {
+                                        String tempURL = tempItem.getImgURL();
+                                        ImageRequest imgReq = new ImageRequest(tempURL,
+                                                (bitmap) -> {
+                                                    Bitmap image;
+                                                    String fileName = getFilename(tempURL);
+                                                    try {
+                                                        String pathname = getFilesDir() + "/" + fileName;
+                                                        File file = new File(pathname);
+                                                        if (file.exists()) {
+                                                            image = BitmapFactory.decodeFile(pathname);
+                                                            tempItem.setImage(image);
+                                                        } else {
+                                                            image = bitmap;
+                                                            image.compress(Bitmap.CompressFormat.PNG, 50, NasaActivity.this.openFileOutput(
+                                                                    fileName, Activity.MODE_PRIVATE));
+                                                            tempItem.setImage(image);
+                                                        }
 
-                                            } catch (FileNotFoundException e) {
-                                                e.printStackTrace();
-                                            }
-                                        },
-                                        1024, 1024, ImageView.ScaleType.CENTER, null,
-                                        (error) -> {
+                                                    } catch (FileNotFoundException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                },
+                                                1024, 1024, ImageView.ScaleType.CENTER, null,
+                                                (error) -> {
+                                                });
+                                        queue.add(imgReq);
+                                        roverList.add(tempItem);
+                                        runOnUiThread(() -> {
+                                            myAdapter.notifyItemInserted(roverList.size() - 1);
                                         });
-                                queue.add(imgReq);
-                                roverList.add(tempItem);
-                                runOnUiThread(() -> {
-                                    myAdapter.notifyItemInserted(roverList.size() - 1);
-                                });
-                            }
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
-                        }
-                },
-                    (error) ->{});
-            queue.add(request);
+                                    }
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            },
+                            (error) -> {
+                            });
+                    queue.add(request);
+                });
+            } else {
+                Toast.makeText(this, "Please enter a number between 0 and 1000", Toast.LENGTH_SHORT).show();
+            }
         });
         class MyRowHolder extends RecyclerView.ViewHolder {
             TextView roverName;
             ImageView roverImage;
+
             public MyRowHolder(@NonNull View itemView) {
                 super(itemView);
                 roverName = itemView.findViewById(R.id.roverName);
                 roverImage = itemView.findViewById(R.id.roverImage);
+                itemView.setOnClickListener((clk) -> {
+                    int position = getAbsoluteAdapterPosition();
+                    RoverItem selected = roverList.get(position);
+                    model.selectedRover.postValue(selected);
+
+                });
             }
+
         }
+        model.selectedRover.observe((this), (newRoverValue) -> {
+            RoverFragment fragment = new RoverFragment(newRoverValue);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.roverFragment, fragment)
+                    .addToBackStack("")
+                    .commit();
+        });
         binding.recycler.setLayoutManager(new LinearLayoutManager(this));
         binding.recycler.setAdapter(myAdapter = new RecyclerView.Adapter<MyRowHolder>() {
             @NonNull
@@ -144,7 +176,7 @@ public class NasaActivity extends AppCompatActivity {
             public void onBindViewHolder(@NonNull MyRowHolder holder, int position) {
                 RoverItem rover = roverList.get(position);
                 holder.roverName.setText(rover.getRoverName());
-                if(rover.getImage() != null){
+                if (rover.getImage() != null) {
                     holder.roverImage.setImageBitmap(rover.getImage());
                 }
             }

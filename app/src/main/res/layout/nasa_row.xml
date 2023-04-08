@@ -11,11 +11,13 @@
         android:layout_width="206dp"
         android:layout_height="63dp"
         android:text="Name goes here"
-        android:textSize="20sp"></TextView>
+        android:textSize="20sp">
+    </TextView>
 
     <ImageView
         android:id="@+id/roverImage"
         android:layout_width="204dp"
-        android:layout_height="110dp"></ImageView>
+        android:layout_height="110dp">
+    </ImageView>
 
 </LinearLayout>

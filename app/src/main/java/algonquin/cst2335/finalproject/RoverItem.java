@@ -6,10 +6,12 @@ public class RoverItem {
     private String roverName;
     private String imgURL;
     private Bitmap image;
+    private String cameraName;
 
-    public RoverItem(String roverName, String imgURL){
+    public RoverItem(String roverName, String imgURL, String cameraName){
         this.roverName = roverName;
         this.imgURL = imgURL;
+        this.cameraName = cameraName;
     }
     public String getRoverName(){
         return roverName;
@@ -20,6 +22,7 @@ public class RoverItem {
     public String getImgURL(){
         return imgURL;
     }
+    public String getCameraName(){return cameraName;}
     public void setImage(Bitmap image){
         this.image = image;
     }
