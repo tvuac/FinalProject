@@ -53,9 +53,6 @@ public class NasaActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RequestQueue queue;
     RoverItem rover;
-    File file;
-    String pathname;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,43 +74,51 @@ public class NasaActivity extends AppCompatActivity {
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                     (response) -> {
                         try {
+                            ArrayList<RoverItem> temp = new ArrayList<>();
                             JSONArray photosArray = response.getJSONArray("photos");
-                            JSONObject position = photosArray.getJSONObject(20);
-                            JSONObject roverObject = position.getJSONObject("rover");
-                            String roverName = roverObject.getString("name");
-                            String imgURL = toHttps(position.getString("img_src"));
-                            rover = new RoverItem(roverName, imgURL);
-                            ImageRequest imgReq = new ImageRequest(imgURL,
-                                    (bitmap) -> {
-                                        Bitmap image;
-                                        String fileName = imgURL.substring(imgURL.length()-7);
-                                        try{
-                                            pathname = getFilesDir() + "/" + fileName;
-                                            file = new File(pathname);
-                                            if (file.exists()){
-                                                image = BitmapFactory.decodeFile(pathname);
-                                                rover.setImage(image);
-                                            }
-                                            else{
-                                                image = bitmap;
-                                                image.compress(Bitmap.CompressFormat.PNG, 100, NasaActivity.this.openFileOutput(
-                                                        fileName, Activity.MODE_PRIVATE));
-                                                rover.setImage(image);
-                                            }
+                            for (int i = 0; i < photosArray.length(); i++) {
+                                JSONObject position = photosArray.getJSONObject(i);
+                                JSONObject roverObject = position.getJSONObject("rover");
+                                String roverName = roverObject.getString("name");
+                                String imgURL = toHttps(position.getString("img_src"));
+                                temp.add(new RoverItem(roverName, imgURL));
+                            }
+                            for (RoverItem tempItem : temp) {
+                                String tempURL = tempItem.getImgURL();
+                                ImageRequest imgReq = new ImageRequest(tempURL,
+                                        (bitmap) -> {
+                                            Bitmap image;
+                                            String fileName = getFilename(tempURL);
+                                            try {
+                                                String pathname = getFilesDir() + "/" + fileName;
+                                                File file = new File(pathname);
+                                                if (file.exists()) {
+                                                    image = BitmapFactory.decodeFile(pathname);
+                                                    tempItem.setImage(image);
+                                                } else {
+                                                    image = bitmap;
+                                                    image.compress(Bitmap.CompressFormat.PNG, 100, NasaActivity.this.openFileOutput(
+                                                            fileName, Activity.MODE_PRIVATE));
+                                                    tempItem.setImage(image);
+                                                }
 
-                                        }catch(FileNotFoundException e){e.printStackTrace();}
-                                    },
-                                    1024,1024,ImageView.ScaleType.CENTER, null,
-                                    (error) -> {});
-                            queue.add(imgReq);
-                            roverList.add(rover);
-                            runOnUiThread(() ->{
-                                myAdapter.notifyItemInserted(roverList.size()-1);
-                            });
+                                            } catch (FileNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
+                                        },
+                                        1024, 1024, ImageView.ScaleType.CENTER, null,
+                                        (error) -> {
+                                        });
+                                queue.add(imgReq);
+                                roverList.add(tempItem);
+                                runOnUiThread(() -> {
+                                    myAdapter.notifyItemInserted(roverList.size() - 1);
+                                });
+                            }
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-                    },
+                },
                     (error) ->{});
             queue.add(request);
         });
@@ -142,7 +147,6 @@ public class NasaActivity extends AppCompatActivity {
                 if(rover.getImage() != null){
                     holder.roverImage.setImageBitmap(rover.getImage());
                 }
-
             }
 
             @Override
@@ -161,5 +165,9 @@ public class NasaActivity extends AppCompatActivity {
     private String toHttps(String url){
         String sub = url.substring(4,url.length());
         return "https" + sub;
+    }
+    public String getFilename(String url){
+        String[] splitURL = url.split("/");
+        return splitURL[splitURL.length - 1];
     }
 }
