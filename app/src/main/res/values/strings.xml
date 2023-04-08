@@ -2,6 +2,6 @@
     <string name="app_name">Weather Forecast</string>
     <string name="hello_message">Hello world</string>
     <string name="button_message">Search weather</string>
-    <string name="enter_location">Enter location</string>
-    <string name="hint_text">Enter location</string>
+    <string name="enter_location">Enter your location</string>
+    <string name="hint_text">Enter a city</string>
 </resources>
