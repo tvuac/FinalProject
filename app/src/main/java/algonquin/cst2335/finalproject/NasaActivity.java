@@ -3,12 +3,12 @@ package algonquin.cst2335.finalproject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,12 +35,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Queue;
-import java.util.Random;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -73,9 +68,17 @@ public class NasaActivity extends AppCompatActivity {
             Intent nextPage = new Intent( NasaActivity.this, NasaFavActivity.class);
             NasaActivity.this.startActivity(nextPage);
         });
+        SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+        binding.date.setText(prefs.getString("date_value", ""));
         binding.search.setOnClickListener((clk) -> {
+            roverList = null;
+            model.roverList.setValue(roverList = new ArrayList<RoverItem>());
+            myAdapter.notifyDataSetChanged();
             date = binding.date.getText().toString();
             if (!date.equals("")) {
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("date_value", date);
+                editor.apply();
                 int numDate = Integer.valueOf(date);
                 if (validate(numDate)) {
                     String url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=" + date +

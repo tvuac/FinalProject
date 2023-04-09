@@ -1,5 +1,6 @@
 package algonquin.cst2335.finalproject;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.room.Room;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -39,12 +42,20 @@ import algonquin.cst2335.finalproject.databinding.RoverFragmentBinding;
                 startActivity(intent);
             });
             binding.delete.setOnClickListener((click) -> {
-                Toast.makeText(getActivity(), "Deleted from favourites", Toast.LENGTH_SHORT).show();
-                Executor thread = Executors.newSingleThreadExecutor();
-                thread.execute(() ->{
-                    rDAO.deleteRover(selected);
-                });
-                getFragmentManager().beginTransaction().remove(this).commit();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure you want to delete this picture from favourites? ")
+                        .setNegativeButton("No", (dialog, cl) -> {})
+                        .setPositiveButton("Yes", (dialog, cl) -> {
+                    Executor thread = Executors.newSingleThreadExecutor();
+                    thread.execute(() ->{
+                        rDAO.deleteRover(selected);
+                    });
+                    getFragmentManager().beginTransaction().remove(this).commit();
+                    NasaFavActivity activity = (NasaFavActivity)getActivity();
+                    activity.roverList.remove(selected);
+                    activity.myAdapter.notifyDataSetChanged();
+                    Toast.makeText(getActivity(), "Deleted from favourites", Toast.LENGTH_SHORT).show();
+                }).create().show();
             });
             return binding.getRoot();
         }

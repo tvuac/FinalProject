@@ -42,7 +42,7 @@ public class RoverFragment extends Fragment {
             Toast.makeText(getActivity(), "Added to favourites", Toast.LENGTH_SHORT).show();
             Executor thread = Executors.newSingleThreadExecutor();
             thread.execute(() ->{
-                rDAO.insertRover(selected);
+                selected.setId((int)rDAO.insertRover(selected));
             });
         });
         return binding.getRoot();
