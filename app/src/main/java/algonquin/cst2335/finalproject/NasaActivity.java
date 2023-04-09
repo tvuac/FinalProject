@@ -98,24 +98,28 @@ public class NasaActivity extends AppCompatActivity {
                                         String tempURL = tempItem.getImgURL();
                                         ImageRequest imgReq = new ImageRequest(tempURL,
                                                 (bitmap) -> {
-                                                    Bitmap image;
-                                                    String fileName = getFilename(tempURL);
-                                                    try {
-                                                        String pathname = getFilesDir() + "/" + fileName;
-                                                        File file = new File(pathname);
-                                                        if (file.exists()) {
-                                                            image = BitmapFactory.decodeFile(pathname);
-                                                            tempItem.setImage(image);
-                                                        } else {
-                                                            image = bitmap;
-                                                            image.compress(Bitmap.CompressFormat.PNG, 50, NasaActivity.this.openFileOutput(
-                                                                    fileName, Activity.MODE_PRIVATE));
-                                                            tempItem.setImage(image);
-                                                        }
 
-                                                    } catch (FileNotFoundException e) {
-                                                        e.printStackTrace();
-                                                    }
+                                                    Executor thread = Executors.newSingleThreadExecutor();
+                                                    thread.execute(() -> {
+                                                        Bitmap image;
+                                                        String fileName = getFilename(tempURL);
+                                                        try {
+                                                            String pathname = getFilesDir() + "/" + fileName;
+                                                            File file = new File(pathname);
+                                                            if (file.exists()) {
+                                                                image = BitmapFactory.decodeFile(pathname);
+                                                                tempItem.setImage(image);
+                                                            } else {
+                                                                image = bitmap;
+                                                                image.compress(Bitmap.CompressFormat.PNG, 50, NasaActivity.this.openFileOutput(
+                                                                        fileName, Activity.MODE_PRIVATE));
+                                                                tempItem.setImage(image);
+                                                            }
+
+                                                        } catch (FileNotFoundException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    });
                                                 },
                                                 1024, 1024, ImageView.ScaleType.CENTER, null,
                                                 (error) -> {

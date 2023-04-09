@@ -72,6 +72,19 @@ public class NasaFavActivity extends AppCompatActivity {
                     .addToBackStack("")
                     .commit();
         });
+        binding.backToMain.setOnClickListener((click) -> {
+            Intent backToMain = new Intent(this, NasaActivity.class);
+            startActivity(backToMain);
+        });
+//        model.roverList.observe((this), (value) ->{
+//            model.roverList.postValue(roverList = new ArrayList<RoverItem>());
+//            Executor thread = Executors.newSingleThreadExecutor();
+//            thread.execute(() ->
+//            {
+//                roverList.addAll(rDAO.getAllRovers());
+//                recyclerView.setAdapter(myAdapter);
+//            });
+//        });
         binding.recycler.setLayoutManager(new LinearLayoutManager(this));
         binding.recycler.setAdapter(myAdapter = new RecyclerView.Adapter<MyRowHolder>() {
             @NonNull
