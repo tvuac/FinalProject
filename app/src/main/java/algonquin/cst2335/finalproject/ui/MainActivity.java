@@ -156,7 +156,20 @@ public class MainActivity extends AppCompatActivity {
 
         binding.recycleView.setLayoutManager(new LinearLayoutManager(this));
 
+        //Week4 Did not include intent but will test it
+        SharedPreferences prefs = getSharedPreferences("CityData", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit(); //Will saved the city typed into the search bar
+        String city = prefs.getString("City", "");
+        editor.putString("City", city); //Saves the city into the CityData file
+        editor.apply();
+
         binding.searchButton.setOnClickListener(button -> { //Search button for the weather forecast
+            Intent intent = new Intent(MainActivity.this, SecondActivity.class);//transition from main activity to second activity
+            String cityTyped = binding.enterCity.getText().toString();
+            intent.putExtra("City", cityTyped);
+            startActivity(intent);//Start a new activity
+
+            //RecycleView
             String cityText = binding.enterCity.getText().toString();
             SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMM-yyyy");
             String setDate = sdf.format(new Date());
