@@ -7,4 +7,5 @@ import java.util.ArrayList;
 
 public class WeatherForecastViewModel extends ViewModel {
     public MutableLiveData<ArrayList<WeatherMessage>> cities = new MutableLiveData<>();
+    public MutableLiveData<WeatherMessage> selectedCity = new MutableLiveData<>();
 }

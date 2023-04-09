@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +40,7 @@ import java.util.concurrent.Executors;
 
 import algonquin.cst2335.finalproject.R;
 import algonquin.cst2335.finalproject.data.WeatherDatabase;
+import algonquin.cst2335.finalproject.data.WeatherDetailsFragment;
 import algonquin.cst2335.finalproject.data.WeatherForecastViewModel;
 import algonquin.cst2335.finalproject.data.WeatherMessage;
 import algonquin.cst2335.finalproject.data.WeatherMessageDAO;
@@ -88,6 +93,32 @@ public class MainActivity extends AppCompatActivity {
      */
     private RecyclerView.Adapter myAdapter;
     WeatherMessageDAO weatherDAO;
+
+    //Toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {//load a menu layout file
+        super.onCreateOptionsMenu(menu);
+            getMenuInflater().inflate(R.menu.my_menu, menu);
+        return true;
+    }
+
+    //Toolbar
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch( item.getItemId())
+        {
+            case R.id.item_1:
+
+                //displays an AlertDialog with instructions for how to use the interface
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("To use this app, enter the name of the city to find the weather forecast")
+                        .setTitle("About this app")
+                        .create()
+                        .show();
+                break;
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +196,9 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
 
         binding.searchButton.setOnClickListener(button -> { //Search button for the weather forecast
+            //Toast message
+            Toast.makeText(MainActivity.this, "Your location is", Toast.LENGTH_LONG);
+
             //Intent
             Intent intent = new Intent(MainActivity.this, SecondActivity.class);//transition from main activity to second activity
             String cityTyped = binding.enterCity.getText().toString();
@@ -187,7 +221,25 @@ public class MainActivity extends AppCompatActivity {
 
             myAdapter.notifyItemInserted(cities.size()-1);
             binding.enterCity.setText("");
-        });
+        });//searchButton
+
+        weatherForecastModel.selectedCity.observe(this,(newValue) -> {
+            //Fragment
+            WeatherDetailsFragment weatherFragment = new WeatherDetailsFragment(newValue);//to add or replace function
+
+            FragmentManager fMgr = getSupportFragmentManager(); //loads the fragment
+            FragmentTransaction tx = fMgr.beginTransaction(); //can add, remove or replace fragment
+            tx.add(R.id.fragmentLocation, weatherFragment);
+            tx.commit();
+
+            //weatherFragment.displayMessage(newValue);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentLocation, weatherFragment)
+                    .commit();
+
+            setSupportActionBar(binding.myToolBar); //Toolbar
+        });//observe()
     }
 
     /**
@@ -208,10 +260,11 @@ public class MainActivity extends AppCompatActivity {
             itemView.setOnClickListener(click -> {
                 int position = getAbsoluteAdapterPosition();
 
-                WeatherMessage clickMessage = cities.get(position);
+                WeatherMessage clickedMessage = cities.get(position);
+                //weatherForecastModel.selectedCity.postValue(clickedMessage);//The app crash
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("Do you want to delete the message" + cityText.getText())
+                builder.setMessage("Do you want to delete the city " + cityText.getText())
                         .setTitle("Warning!")
                         .setPositiveButton("Yes", (dialog, which) -> {
                             Executor thread1 = Executors.newSingleThreadExecutor();
@@ -225,8 +278,8 @@ public class MainActivity extends AppCompatActivity {
                                             .setAction("Undo", clk -> {
                                                 Executor thread2 = Executors.newSingleThreadExecutor();
                                                 thread2.execute(() -> {
-                                                    weatherDAO.insertMessage(clickMessage);//insert the city from database
-                                                    cities.add(position, clickMessage);
+                                                    weatherDAO.insertMessage(clickedMessage);//insert the city from database
+                                                    cities.add(position, clickedMessage);
 
                                                     runOnUiThread(() -> {
                                                         myAdapter.notifyItemInserted(position);

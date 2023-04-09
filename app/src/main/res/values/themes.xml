@@ -9,6 +9,9 @@
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/my_statusbar</item>
-        <!-- Customize your theme here. -->
+
+        <!-- Tells the user not to use action bar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>
