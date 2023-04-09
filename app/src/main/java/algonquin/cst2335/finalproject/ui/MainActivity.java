@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -137,22 +138,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });//setAdapter for MyRowHolder
 
-        //weatherModel.editString.observe(this, s -> {
-        //    binding.enterCity.setText("Your location is " + s);
-        //});
-
         //mytext = findViewById(R.id.textview);
         //searchWeather = findViewById(R.id.searchButton);
         //enterCity = findViewById(R.id.enterCity);
-
-        //SharedPreferences Lab 4 Part 2 of 2
-        //SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
-        //SharedPreferences.Editor editor = prefs.edit();
-
-        //String location =  prefs.getString("userLocation", "");
-        //editor.putString("userLocation", location);
-
-        //editor.apply();
 
         binding.recycleView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -197,6 +185,14 @@ public class MainActivity extends AppCompatActivity {
             super(itemView);
             cityText = itemView.findViewById(R.id.cityTextView);
             dateText = itemView.findViewById(R.id.datetextView);
+
+            itemView.setOnClickListener(click -> {
+                int position = getAbsoluteAdapterPosition();
+
+                WeatherMessage clickMessage = cities.get(position);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder( MainActivity.this );
+            });
         }
     }
 }
