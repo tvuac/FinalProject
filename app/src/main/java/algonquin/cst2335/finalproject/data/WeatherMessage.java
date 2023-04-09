@@ -15,13 +15,13 @@ public class WeatherMessage {
         public long id;
 
         @ColumnInfo(name="city")
-        private String city;
+        public String city;
 
         @ColumnInfo(name="DateSent")
-        private String dateSent;
+        public String dateSent;
 
         @ColumnInfo(name="searchButton")
-        private boolean searchButton;
+        public boolean searchButton;
 
         public WeatherMessage(String city, String dateSent, boolean searchButton)
         {

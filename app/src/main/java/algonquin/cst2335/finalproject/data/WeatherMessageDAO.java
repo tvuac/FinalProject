@@ -19,7 +19,7 @@ public interface WeatherMessageDAO {
      * @return Return the id
      */
     @Insert
-    public long insertMessage(WeatherMessage city);
+    public long insertMessage(WeatherMessage c);
 
     /**
      * This will get all the messages from weather message class
@@ -32,6 +32,7 @@ public interface WeatherMessageDAO {
      * Delete the city from the database
      * @param city The city entered into the database
      */
+
     @Delete
     public void deleteMessage(WeatherMessage city);
 }

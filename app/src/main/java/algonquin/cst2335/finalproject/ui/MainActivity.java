@@ -2,6 +2,7 @@ package algonquin.cst2335.finalproject.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
      * This holds the value for the recycle view adapter
      */
     private RecyclerView.Adapter myAdapter;
+    WeatherMessageDAO weatherDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +107,16 @@ public class MainActivity extends AppCompatActivity {
 
         if(cities == null) {
             weatherForecastModel.cities.postValue(cities = new ArrayList<WeatherMessage>());
-        }
+
+            Executor thread = Executors.newSingleThreadExecutor();
+            thread.execute(() -> {
+                //on a second thread
+                List<WeatherMessage> previousMessages = weatherMessageDAO.getAllMessages();//loads all of the message from weather message class
+                cities.addAll(previousMessages);//adds all the cities stored in the database
+                runOnUiThread(() -> {
+                    binding.recycleView.setAdapter(myAdapter);//this is the main thread
+                });
+            });}
 
         binding.recycleView.setAdapter(myAdapter = new RecyclerView.Adapter<MyRowHolder>() {
             @NonNull
@@ -118,11 +129,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onBindViewHolder(@NonNull MyRowHolder holder, int position) {
                 WeatherMessage city = cities.get(position);
-                holder.cityText.setText(city.getCity()); //set the city in onBindViewHolder
+                holder.cityText.setText(city.getCity());//set the city in onBindViewHolder
 
                 SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMM-yyyy");
                 String setDate = sdf.format(new Date());
-                holder.dateText.setText(city.getDateSent());
+                holder.dateText.setText(setDate);
             }
 
             @Override
@@ -165,18 +176,14 @@ public class MainActivity extends AppCompatActivity {
             SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMM-yyyy");
             String setDate = sdf.format(new Date());
 
-
-
             WeatherMessage newMessage = new WeatherMessage(cityText, setDate, true);
             cities.add(newMessage);
 
-            Executor thread = Executors.newSingleThreadExecutor();
-            thread.execute(() -> {
+            Executor thread1 = Executors.newSingleThreadExecutor();
+            thread1.execute(() -> {
                 long id = weatherMessageDAO.insertMessage(newMessage);//Insert into the database
                 newMessage.id = id; //shows the id
             });
-
-            //execute function calls the run function
 
             myAdapter.notifyItemInserted(cities.size()-1);
             binding.enterCity.setText("");
@@ -198,10 +205,47 @@ public class MainActivity extends AppCompatActivity {
 
             super(itemView);
 
+            itemView.setOnClickListener(click -> {
+                int position = getAbsoluteAdapterPosition();
+
+                WeatherMessage clickMessage = cities.get(position);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("Do you want to delete the message" + cityText.getText())
+                        .setTitle("Warning!")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            Executor thread1 = Executors.newSingleThreadExecutor();
+                            thread1.execute(() -> {
+                                //weatherDAO.deleteMessage(clickMessage);//delete the city from database /Program crash on this line
+                                cities.remove(position);
+
+                                runOnUiThread(() -> {
+                                    myAdapter.notifyItemRemoved(position);//update Recycle View
+                                    Snackbar.make(dateText, "Item deleted", Snackbar.LENGTH_LONG)
+                                            .setAction("Undo", clk -> {
+                                                Executor thread2 = Executors.newSingleThreadExecutor();
+                                                thread2.execute(() -> {
+                                                    weatherDAO.insertMessage(clickMessage);//insert the city from database
+                                                    cities.add(position, clickMessage);
+
+                                                    runOnUiThread(() -> {
+                                                        myAdapter.notifyItemInserted(position);
+                                                    });
+                                                });
+                                            })
+                                            .show();
+                                });
+                            });
+                        })//positiveButton
+                        .setNegativeButton("No", (dialog, which) -> {
+
+                        })//negativeButton
+                        .create()
+                        .show();
+            });//setOnClickListener
+
             cityText = itemView.findViewById(R.id.cityTextView);
             dateText = itemView.findViewById(R.id.datetextView);
-
-
-        }
+        }//MyRowHolder
     }
 }
