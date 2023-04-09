@@ -18,30 +18,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/range"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/date"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-    </TextView>
+        app:layout_constraintTop_toTopOf="parent"></TextView>
 
     <EditText
         android:id="@+id/date"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:hint="@string/enter"
         android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/search"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-    </EditText>
+        app:layout_constraintTop_toBottomOf="@+id/textView"></EditText>
 
     <Button
         android:id="@+id/search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="@string/search"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
-    </Button>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fav"></Button>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
@@ -49,6 +47,15 @@
         android:id="@+id/recycler"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search" />
+
+    <Button
+        android:id="@+id/fav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="View Favourites"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

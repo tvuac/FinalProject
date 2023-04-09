@@ -2,6 +2,7 @@ package algonquin.cst2335.finalproject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -54,6 +56,7 @@ public class NasaActivity extends AppCompatActivity {
     RequestQueue queue;
     RoverItem rover;
     RoverModel model;
+    RoverItemDAO rDAO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,14 +67,12 @@ public class NasaActivity extends AppCompatActivity {
         if (roverList == null) {
             model.roverList.postValue(roverList = new ArrayList<RoverItem>());
         }
-//        model = new ViewModelProvider(this).get(RoverModel.class);
-//        roverList = model.roverList.getValue();
         recyclerView = binding.recycler;
         queue = Volley.newRequestQueue(this);
-//        if (roverList == null) {
-//            model.roverList.postValue(roverList = new ArrayList<RoverItem>());
-//        }
-
+        binding.fav.setOnClickListener((click) -> {
+            Intent nextPage = new Intent( NasaActivity.this, NasaFavActivity.class);
+            NasaActivity.this.startActivity(nextPage);
+        });
         binding.search.setOnClickListener((clk) -> {
             date = binding.date.getText().toString();
             int numDate = Integer.valueOf(date);
