@@ -17,28 +17,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import algonquin.cst2335.finalproject.R;
 import algonquin.cst2335.finalproject.data.WeatherForecastViewModel;
+import algonquin.cst2335.finalproject.data.WeatherMessage;
 import algonquin.cst2335.finalproject.databinding.ActivityMainBinding;
 import algonquin.cst2335.finalproject.databinding.CityWeatherforecastBinding;
 
@@ -51,13 +41,14 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * The variable for binding
+     * viewBinding must true in build.gradle
      */
-    private ActivityMainBinding binding; // viewBinding must true in build.gradle
+    ActivityMainBinding binding;
 
     /**
      * The variable for weatherModel
      */
-    private WeatherForecastViewModel weatherModel;
+    private WeatherForecastViewModel weatherForecastModel;
 
     /**
      * The variable for cityName
@@ -75,21 +66,21 @@ public class MainActivity extends AppCompatActivity {
     private Button searchWeather = null;
 
     /**
-     * This holds the
+     * This holds the value of the city
      */
-    private EditText enterCity = null;
+    private EditText enterCity;
 
     /**
      * The Volley object will connect to the server
      */
-    protected RequestQueue queue = Volley.newRequestQueue(this);
+    //protected RequestQueue queue = Volley.newRequestQueue(this);
 
     /**
      * The variable stores the image
      */
     Bitmap image;
 
-    ArrayList<String> cities = new ArrayList<>();
+    public ArrayList<WeatherMessage> cities;
 
     /**
      * This holds the value for the recycle view adapter
@@ -102,8 +93,16 @@ public class MainActivity extends AppCompatActivity {
 
         //weatherModel = new ViewModelProvider(this).get(WeatherForecastViewModel.class);//Weather Forecast View Model
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+
+        WeatherForecastViewModel weatherForecastModel = new ViewModelProvider(this).get(WeatherForecastViewModel.class);
+        cities = weatherForecastModel.cities.getValue(); //survive rotation
+
         setContentView(binding.getRoot());//loads the XML on screen
+
+        if(cities == null) {
+            weatherForecastModel.cities.postValue(cities = new ArrayList<WeatherMessage>());
+        }
 
         binding.recycleView.setAdapter(myAdapter = new RecyclerView.Adapter<MyRowHolder>() {
             @NonNull
@@ -115,9 +114,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull MyRowHolder holder, int position) {
-                String city = cities.get(position);
-                holder.cityText.setText(city); //set the city in onBindViewHolder
-                holder.dateText.setText("");
+                WeatherMessage city = cities.get(position);
+                holder.cityText.setText(city.getCity()); //set the city in onBindViewHolder
+
+                SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMM-yyyy");
+                String setDate = sdf.format(new Date());
+                holder.dateText.setText(city.getDateSent());
             }
 
             @Override
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
            * @return return the cities to represent a layout
            */
             public int getItemViewType(int position) {
-            return position % 2;
+                return position % 2;
             }
         });//setAdapter for MyRowHolder
 
@@ -144,16 +146,25 @@ public class MainActivity extends AppCompatActivity {
         //enterCity = findViewById(R.id.enterCity);
 
         //SharedPreferences Lab 4 Part 2 of 2
-        SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
+        //SharedPreferences prefs = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+        //SharedPreferences.Editor editor = prefs.edit();
 
-        String location =  prefs.getString("userLocation", "");
-        editor.putString("userLocation", location);
+        //String location =  prefs.getString("userLocation", "");
+        //editor.putString("userLocation", location);
 
-        editor.apply();
+        //editor.apply();
+
+        binding.recycleView.setLayoutManager(new LinearLayoutManager(this));
 
         binding.searchButton.setOnClickListener(button -> { //Search button for the weather forecast
-            cities.add(binding.enterCity.getText().toString());
+            String cityText = binding.enterCity.getText().toString();
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMM-yyyy");
+            String setDate = sdf.format(new Date());
+
+            WeatherMessage newMessage = new WeatherMessage(cityText, setDate, true);
+            cities.add(newMessage);
+
+            myAdapter.notifyItemInserted(cities.size()-1);
             binding.enterCity.setText("");
         });
     }
@@ -163,8 +174,8 @@ public class MainActivity extends AppCompatActivity {
      */
     class MyRowHolder extends RecyclerView.ViewHolder {
 
-        TextView cityText;
-        TextView dateText;
+        protected TextView cityText;
+        protected TextView dateText;
 
         /**
          * @param itemView
