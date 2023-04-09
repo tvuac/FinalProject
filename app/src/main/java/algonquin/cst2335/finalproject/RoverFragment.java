@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.room.Room;
 
 import java.util.concurrent.Executor;
@@ -27,7 +28,7 @@ public class RoverFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         RoverFragmentBinding binding = RoverFragmentBinding.inflate(getLayoutInflater());
-        RoverDatabase db = Room.databaseBuilder(getActivity(), RoverDatabase.class, "database-name").build();
+        RoverDatabase db = Room.databaseBuilder(getActivity(), RoverDatabase.class, "rovers").build();
         rDAO = db.rDAO();
         binding.detailsName.setText(selected.getCameraName());
         binding.detailsURL.setText(selected.getImgURL());
@@ -38,6 +39,7 @@ public class RoverFragment extends Fragment {
             startActivity(intent);
         });
         binding.save.setOnClickListener((click) -> {
+            Toast.makeText(getActivity(), "Added to favourites", Toast.LENGTH_SHORT).show();
             Executor thread = Executors.newSingleThreadExecutor();
             thread.execute(() ->{
                 rDAO.insertRover(selected);

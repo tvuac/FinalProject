@@ -11,6 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FinalProject"
         tools:targetApi="31">
+        <activity android:name=".NasaFavActivity"></activity>
         <activity
             android:name=".NasaActivity"
             android:exported="true">

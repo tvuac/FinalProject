@@ -75,12 +75,11 @@ public class NasaActivity extends AppCompatActivity {
         });
         binding.search.setOnClickListener((clk) -> {
             date = binding.date.getText().toString();
-            int numDate = Integer.valueOf(date);
-            if (validate(numDate)) {
-                String url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=" + date +
-                        "&api_key=zf1BVnH0bXnoSoQfq5RQdl39UKlyCHKXKOurI2TC";
-                Executor thread = Executors.newSingleThreadExecutor();
-                thread.execute(() -> {
+            if (!date.equals("")) {
+                int numDate = Integer.valueOf(date);
+                if (validate(numDate)) {
+                    String url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=" + date +
+                            "&api_key=zf1BVnH0bXnoSoQfq5RQdl39UKlyCHKXKOurI2TC";
                     JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                             (response) -> {
                                 try {
@@ -134,9 +133,9 @@ public class NasaActivity extends AppCompatActivity {
                             (error) -> {
                             });
                     queue.add(request);
-                });
-            } else {
-                Toast.makeText(this, "Please enter a number between 0 and 1000", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Please enter a number between 0 and 1000", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         class MyRowHolder extends RecyclerView.ViewHolder {
