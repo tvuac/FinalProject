@@ -35,10 +35,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import algonquin.cst2335.finalproject.R;
 import algonquin.cst2335.finalproject.data.WeatherForecastViewModel;
 import algonquin.cst2335.finalproject.databinding.ActivityMainBinding;
+import algonquin.cst2335.finalproject.databinding.CityWeatherforecastBinding;
 
 /**
  * The Main Activity class
@@ -87,6 +89,13 @@ public class MainActivity extends AppCompatActivity {
      */
     Bitmap image;
 
+    ArrayList<String> cities = new ArrayList<>();
+
+    /**
+     * This holds the value for the recycle view adapter
+     */
+    private RecyclerView.Adapter myAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,28 +105,36 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());//loads the XML on screen
 
-        binding.recycleView.setAdapter(new RecyclerView.Adapter<MyRowHolder>() {
+        binding.recycleView.setAdapter(myAdapter = new RecyclerView.Adapter<MyRowHolder>() {
             @NonNull
             @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return null;
+            public MyRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                CityWeatherforecastBinding binding = CityWeatherforecastBinding.inflate(getLayoutInflater());
+                return new MyRowHolder(binding.getRoot());
             }
 
             @Override
             public void onBindViewHolder(@NonNull MyRowHolder holder, int position) {
-
-            }
-
-            @Override
-            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+                String city = cities.get(position);
+                holder.cityText.setText(city); //set the city in onBindViewHolder
+                holder.dateText.setText("");
             }
 
             @Override
             public int getItemCount() {
-                return 0;
+                return cities.size(); //the number of cities in the list
             }
-        })
+
+            /**
+           * The function returns an int and determine which layout to load
+           * @param position position to query
+           * @return return the cities to represent a layout
+           */
+            public int getItemViewType(int position) {
+            return position % 2;
+            }
+        });//setAdapter for MyRowHolder
+
         //weatherModel.editString.observe(this, s -> {
         //    binding.enterCity.setText("Your location is " + s);
         //});
@@ -136,11 +153,8 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
 
         binding.searchButton.setOnClickListener(button -> { //Search button for the weather forecast
-            //StartingActivities Part 1 of 2
-            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-            String userInput = binding.enterCity.getText().toString();
-            intent.putExtra("userLocation", userInput);
-            startActivity(intent);
+            cities.add(binding.enterCity.getText().toString());
+            binding.enterCity.setText("");
         });
     }
 
@@ -149,12 +163,16 @@ public class MainActivity extends AppCompatActivity {
      */
     class MyRowHolder extends RecyclerView.ViewHolder {
 
+        TextView cityText;
+        TextView dateText;
+
         /**
-         *
          * @param itemView
          */
         public MyRowHolder(@NonNull View itemView) {
             super(itemView);
+            cityText = itemView.findViewById(R.id.cityTextView);
+            dateText = itemView.findViewById(R.id.datetextView);
         }
     }
 }
