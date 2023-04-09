@@ -12,7 +12,7 @@ public class WeatherMessage {
 
         @PrimaryKey(autoGenerate = true)
         @ColumnInfo(name="id")
-        public int id;
+        public long id;
 
         @ColumnInfo(name="city")
         private String city;
@@ -23,11 +23,11 @@ public class WeatherMessage {
         @ColumnInfo(name="searchButton")
         private boolean searchButton;
 
-        public WeatherMessage(String city, String date, boolean search)
+        public WeatherMessage(String city, String dateSent, boolean searchButton)
         {
             this.city = city;
-            this.dateSent = date;
-            this.searchButton = search;
+            this.dateSent = dateSent;
+            this.searchButton = searchButton;
         }
 
         public String getCity() {

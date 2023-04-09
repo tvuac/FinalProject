@@ -22,14 +22,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import algonquin.cst2335.finalproject.R;
+import algonquin.cst2335.finalproject.data.WeatherDatabase;
 import algonquin.cst2335.finalproject.data.WeatherForecastViewModel;
 import algonquin.cst2335.finalproject.data.WeatherMessage;
+import algonquin.cst2335.finalproject.data.WeatherMessageDAO;
 import algonquin.cst2335.finalproject.databinding.ActivityMainBinding;
 import algonquin.cst2335.finalproject.databinding.CityWeatherforecastBinding;
 
@@ -59,29 +67,20 @@ public class MainActivity extends AppCompatActivity {
     /**
      * This holds the text on top of the screen for the weather forecast
      */
-    private TextView mytext = null;
+    private TextView mytext;
 
     /**
-     * This holds the
+     * This holds the value for the search button
      */
-    private Button searchWeather = null;
+    private Button searchWeather;
 
     /**
      * This holds the value of the city
      */
     private EditText enterCity;
 
-    /**
-     * The Volley object will connect to the server
-     */
-    //protected RequestQueue queue = Volley.newRequestQueue(this);
-
-    /**
-     * The variable stores the image
-     */
-    Bitmap image;
-
     public ArrayList<WeatherMessage> cities;
+
 
     /**
      * This holds the value for the recycle view adapter
@@ -92,10 +91,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //weatherModel = new ViewModelProvider(this).get(WeatherForecastViewModel.class);//Weather Forecast View Model
+        //Open the WeatherDatabase
+        WeatherDatabase weatherDatabase = Room.databaseBuilder(getApplicationContext(), WeatherDatabase.class, "CityDatabase").build();
+        WeatherMessageDAO weatherMessageDAO = weatherDatabase.weatherMessageDAO();
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
 
+        //WeatherForecastViewModel
         WeatherForecastViewModel weatherForecastModel = new ViewModelProvider(this).get(WeatherForecastViewModel.class);
         cities = weatherForecastModel.cities.getValue(); //survive rotation
 
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.recycleView.setLayoutManager(new LinearLayoutManager(this));
 
-        //Week4 Did not include intent but will test it
+        //SharedPreferences
         SharedPreferences prefs = getSharedPreferences("CityData", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit(); //Will saved the city typed into the search bar
         String city = prefs.getString("City", "");
@@ -152,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
 
         binding.searchButton.setOnClickListener(button -> { //Search button for the weather forecast
+            //Intent
             Intent intent = new Intent(MainActivity.this, SecondActivity.class);//transition from main activity to second activity
             String cityTyped = binding.enterCity.getText().toString();
             intent.putExtra("City", cityTyped);
@@ -162,8 +165,18 @@ public class MainActivity extends AppCompatActivity {
             SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd-MMM-yyyy");
             String setDate = sdf.format(new Date());
 
+
+
             WeatherMessage newMessage = new WeatherMessage(cityText, setDate, true);
             cities.add(newMessage);
+
+            Executor thread = Executors.newSingleThreadExecutor();
+            thread.execute(() -> {
+                long id = weatherMessageDAO.insertMessage(newMessage);//Insert into the database
+                newMessage.id = id; //shows the id
+            });
+
+            //execute function calls the run function
 
             myAdapter.notifyItemInserted(cities.size()-1);
             binding.enterCity.setText("");
@@ -182,17 +195,13 @@ public class MainActivity extends AppCompatActivity {
          * @param itemView
          */
         public MyRowHolder(@NonNull View itemView) {
+
             super(itemView);
+
             cityText = itemView.findViewById(R.id.cityTextView);
             dateText = itemView.findViewById(R.id.datetextView);
 
-            itemView.setOnClickListener(click -> {
-                int position = getAbsoluteAdapterPosition();
 
-                WeatherMessage clickMessage = cities.get(position);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder( MainActivity.this );
-            });
         }
     }
 }
