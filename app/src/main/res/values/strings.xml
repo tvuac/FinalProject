@@ -4,4 +4,6 @@
     <string name="button_message">Search weather</string>
     <string name="enter_location">Enter your location</string>
     <string name="hint_text">Enter a city</string>
+    <string name="city">City</string>
+    <string name="date">Date</string>
 </resources>
