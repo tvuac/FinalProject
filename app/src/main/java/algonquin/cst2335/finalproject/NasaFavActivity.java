@@ -69,9 +69,7 @@ public class NasaFavActivity extends AppCompatActivity {
             {
                 roverList.addAll(rDAO.getAllRovers());
             });
-            runOnUiThread(()->{
                 recyclerView.setAdapter(myAdapter);
-            });
         }
         class MyRowHolder extends RecyclerView.ViewHolder {
             TextView roverName;

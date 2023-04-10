@@ -84,8 +84,6 @@ public class NasaActivity extends AppCompatActivity {
         if (roverList == null) {
             model.roverList.postValue(roverList = new ArrayList<RoverItem>());
         }
-
-        recyclerView = binding.recycler;
         queue = Volley.newRequestQueue(this);
         binding.fav.setOnClickListener((click) -> {
             Intent nextPage = new Intent( NasaActivity.this, NasaFavActivity.class);
