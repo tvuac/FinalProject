@@ -6,4 +6,7 @@
     <string name="favText">Favourite Images</string>
     <string name="delete">delete</string>
     <string name="backToMain">Back</string>
+    <string name="favButton">View Favourites</string>
+    <string name="namePlaceholder">Name goes here</string>
+    <string name="save">save</string>
 </resources>

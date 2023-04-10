@@ -80,6 +80,7 @@ public class NasaActivity extends AppCompatActivity {
                 editor.putString("date_value", date);
                 editor.apply();
                 int numDate = Integer.valueOf(date);
+                binding.date.setText("");
                 if (validate(numDate)) {
                     String url = "https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=" + date +
                             "&api_key=zf1BVnH0bXnoSoQfq5RQdl39UKlyCHKXKOurI2TC";

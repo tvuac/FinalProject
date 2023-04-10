@@ -10,8 +10,9 @@
         android:layout_width="156dp"
         android:layout_height="49dp"
         android:layout_margin="35dp"
-        android:text="Name goes here"
-        android:textSize="20sp"></TextView>
+        android:text="@string/namePlaceholder"
+        android:textSize="20sp">
+    </TextView>
 
     <ImageView
         android:id="@+id/roverImage"
