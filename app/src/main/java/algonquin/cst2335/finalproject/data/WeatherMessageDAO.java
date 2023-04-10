@@ -15,7 +15,7 @@ public interface WeatherMessageDAO {
 
     /**
      * This will insert a weather message object and return the id
-     * @param city The city entered into the database
+     * @param c The city entered into the database
      * @return Return the id
      */
     @Insert
