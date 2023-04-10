@@ -45,6 +45,7 @@ import java.util.concurrent.Executors;
 
 import algonquin.cst2335.finalproject.databinding.ActivityNasaBinding;
 import algonquin.cst2335.finalproject.databinding.NasaRowBinding;
+import algonquin.cst2335.finalproject.ui.MainActivity;
 
 public class NasaActivity extends AppCompatActivity {
     private ActivityNasaBinding binding;
@@ -70,6 +71,9 @@ public class NasaActivity extends AppCompatActivity {
                 Intent newApp = new Intent(this, PlaceKitten.class);
                 startActivity(newApp);
                 break;
+            case R.id.weatherTool2:
+                Intent newApp2 = new Intent(this, MainActivity.class);
+                startActivity(newApp2);
         }
 
         return true;

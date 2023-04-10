@@ -6,4 +6,9 @@
         android:title="Kitten Place Holder App"
         app:showAsAction="never"
         android:id="@+id/kittenTool"/>
+    <item
+        android:title="WeatherStack"
+        app:showAsAction="never"
+        android:id="@+id/weatherTool2">
+    </item>
 </menu>

@@ -26,6 +26,8 @@
             android:exported="false"/>
         <activity
             android:name=".ui.MainActivity"
+            android:exported="true"/>
+        <activity
             android:name=".NasaActivity"
             android:exported="true">
             <intent-filter>

@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"></androidx.appcompat.widget.Toolbar>
+        tools:ignore="MissingConstraints">
+    </androidx.appcompat.widget.Toolbar>
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
@@ -30,7 +31,8 @@
         app:layout_constraintEnd_toEndOf="@+id/date"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fav"></TextView>
+        app:layout_constraintTop_toBottomOf="@+id/fav">
+    </TextView>
 
     <EditText
         android:id="@+id/date"
@@ -41,7 +43,8 @@
         app:layout_constraintEnd_toStartOf="@+id/search"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"></EditText>
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+    </EditText>
 
     <Button
         android:id="@+id/search"
@@ -50,7 +53,8 @@
         android:text="@string/search"
         app:layout_constraintBottom_toBottomOf="@+id/date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/date"></Button>
+        app:layout_constraintTop_toTopOf="@+id/date">
+    </Button>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"

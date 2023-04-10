@@ -5,4 +5,8 @@
     <item android:title="Nasa Rover Photos"
         app:showAsAction="never"
         android:id="@+id/nasaTool"/>
+    <item android:title="WeatherStack"
+        app:showAsAction="never"
+        android:id="@+id/weatherTool">
+    </item>
 </menu>

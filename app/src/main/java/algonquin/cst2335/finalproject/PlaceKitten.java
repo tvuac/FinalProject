@@ -53,6 +53,7 @@ import java.util.concurrent.Executors;
 
 
 import algonquin.cst2335.finalproject.databinding.ActivityPlaceKittenBinding;
+import algonquin.cst2335.finalproject.ui.MainActivity;
 
 public class PlaceKitten extends AppCompatActivity implements ImageAdapter.ItemClickListener {
 
@@ -82,6 +83,9 @@ public class PlaceKitten extends AppCompatActivity implements ImageAdapter.ItemC
                 Intent newApp = new Intent(this, NasaActivity.class);
                 startActivity(newApp);
                 break;
+            case R.id.weatherTool:
+                Intent newApp2 = new Intent(this, MainActivity.class);
+                startActivity(newApp2);
         }
 
         return true;

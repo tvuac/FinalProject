@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weather Forecast</string>
+    <string name="app_name_weather">Weather Forecast</string>
     <string name="hello_message">Hello world</string>
     <string name="button_message">Search weather</string>
     <string name="enter_location">Enter your location</string>
