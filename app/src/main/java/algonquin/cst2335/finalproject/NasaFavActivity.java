@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,12 +34,31 @@ public class NasaFavActivity extends AppCompatActivity {
     RoverModel model;
     RecyclerView recyclerView;
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.nasa_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch( item.getItemId() )
+        {
+            case R.id.kittenTool:
+                Intent newApp = new Intent(this, PlaceKitten.class);
+                startActivity(newApp);
+                break;
+        }
+
+        return true;
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityFavnasaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         model = new ViewModelProvider(this).get(RoverModel.class);
         roverList = model.roverList.getValue();
+        setSupportActionBar(binding.toolbar);
         recyclerView = binding.recycler;
         RoverDatabase db = Room.databaseBuilder(getApplicationContext(), RoverDatabase.class, "roverDatabase").build();
         rDAO = db.rDAO();
