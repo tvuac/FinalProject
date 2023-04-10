@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -66,13 +68,30 @@ public class PlaceKitten extends AppCompatActivity implements ImageAdapter.ItemC
 
     FavoritesDatabase favoritesDatabase;
     ImageDetailsDao imageDetailsDao;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.kitten_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch( item.getItemId() )
+        {
+            case R.id.nasaTool:
+                Intent newApp = new Intent(this, NasaActivity.class);
+                startActivity(newApp);
+                break;
+        }
 
+        return true;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityPlaceKittenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        setSupportActionBar(binding.toolbar2);
 
         heightEditText = binding.heightText;
         widthEditText = binding.widthText;

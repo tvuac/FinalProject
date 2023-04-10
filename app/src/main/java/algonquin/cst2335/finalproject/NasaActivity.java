@@ -9,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -55,6 +57,24 @@ public class NasaActivity extends AppCompatActivity {
     RoverModel model;
     RoverItemDAO rDAO;
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.nasa_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch( item.getItemId() )
+        {
+            case R.id.kittenTool:
+                Intent newApp = new Intent(this, PlaceKitten.class);
+                startActivity(newApp);
+                break;
+        }
+
+        return true;
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNasaBinding.inflate(getLayoutInflater());
@@ -64,6 +84,7 @@ public class NasaActivity extends AppCompatActivity {
         if (roverList == null) {
             model.roverList.postValue(roverList = new ArrayList<RoverItem>());
         }
+
         recyclerView = binding.recycler;
         queue = Volley.newRequestQueue(this);
         binding.fav.setOnClickListener((click) -> {
@@ -149,6 +170,7 @@ public class NasaActivity extends AppCompatActivity {
                 }
             }
         });
+        setSupportActionBar(binding.toolbarNasa);
         binding.help.setOnClickListener((clk) -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("This is a NASA Mars Rover photos application," +
@@ -160,6 +182,7 @@ public class NasaActivity extends AppCompatActivity {
             builder.setTitle("Help").
                     setPositiveButton("Ok", (dialog, cl) -> {}).create().show();
         });
+
         class MyRowHolder extends RecyclerView.ViewHolder {
             TextView roverName;
             ImageView roverImage;
@@ -225,4 +248,5 @@ public class NasaActivity extends AppCompatActivity {
         String[] splitURL = url.split("/");
         return splitURL[splitURL.length - 1];
     }
+
 }
