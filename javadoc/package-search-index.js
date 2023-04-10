@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"algonquin.cst2335.finalproject"},{"l":"algonquin.cst2335.finalproject.data"},{"l":"algonquin.cst2335.finalproject.databinding"},{"l":"algonquin.cst2335.finalproject.ui"},{"l":"All Packages","url":"allpackages-index.html"}]
