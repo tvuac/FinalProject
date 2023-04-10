@@ -52,9 +52,18 @@ import algonquin.cst2335.finalproject.databinding.RoverFragmentBinding;
                     });
                     getFragmentManager().beginTransaction().remove(this).commit();
                     NasaFavActivity activity = (NasaFavActivity)getActivity();
+                    int position = activity.roverList.indexOf(selected);
                     activity.roverList.remove(selected);
                     activity.myAdapter.notifyDataSetChanged();
-                    Toast.makeText(getActivity(), "Deleted from favourites", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(activity.findViewById(R.id.roverFragment2), "Deleted from favourites", Snackbar.LENGTH_LONG)
+                            .setAction("Undo", (clk) -> {
+                                activity.roverList.add(position, selected);
+                                Executor thread2 = Executors.newSingleThreadExecutor();
+                                thread2.execute(() -> {
+                                    selected.setId((int)rDAO.insertRover(selected));
+                                });
+                                activity.myAdapter.notifyDataSetChanged();
+                            }).show();
                 }).create().show();
             });
             return binding.getRoot();
