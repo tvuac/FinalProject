@@ -234,67 +234,67 @@ public class MainActivity extends AppCompatActivity {
             //Volley JSON
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, stringURL, null,
                     (response) -> {
-                    try {
-                        JSONObject coord = response.getJSONObject("coord");
-                        JSONArray weatherArray = response.getJSONArray("weather");
-                        JSONObject position0 = weatherArray.getJSONObject(0);
-                        String description = position0.getString("description");
-                        String iconName = position0.getString("icon");
-                        //String pathname = getFilesDir() + "/" + iconName + ".png";
-                        JSONObject mainObject = response.getJSONObject("main");
-                        double current = mainObject.getDouble("temp");
-                        double min = mainObject.getDouble("temp_min");
-                        double max = mainObject.getDouble("temp_max");
-                        int humidity = mainObject.getInt("humidity");
-
                         try {
-                            String pathname = getFilesDir() + "/" + iconName + ".png";
-                            File file = new File(pathname);
-                            if(file.exists())
-                            {
-                                Bitmap image = BitmapFactory.decodeFile(pathname);
-                            }else {
-                                ImageRequest imgReq = new ImageRequest("https://openweathermap.org/img/img/w/" + iconName + ".png", new Response.Listener<Bitmap>(){
-                                    @Override
-                                    public void onResponse(Bitmap bitmap) {
-                                        try {
-                                            image =  bitmap;
-                                            image.compress(Bitmap.CompressFormat.PNG, 100,
-                                                    MainActivity.this.openFileOutput(iconName + ".png", Activity.MODE_PRIVATE));
-                                            binding.icon.setImageBitmap(image);
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }//end of catch block
-                                    } //end of onResponse
-                                }, 1024, 1024, ImageView.ScaleType.CENTER, null, (error ) -> {
-                                    Toast.makeText(MainActivity.this, "" + error, Toast.LENGTH_SHORT).show();
-                                });
-                                queue.add(imgReq);
-                            }//end of else//Place the GUI code inside the {} so that the Main GUI Thread will run that code
-                        }//end of try for string path name
-                        catch (Exception e) {
-                            e.printStackTrace();
-                        }//end of catch for string path name
-                        runOnUiThread( () -> {
-                            //Set the text for temperature to visible
-                            binding.temp.setText("The current temperature is " + current);
-                            binding.temp.setVisibility(View.VISIBLE);
-                            binding.maxTemp.setText("The max temperature is " + max); //Set the text for max temperature to visible
-                            binding.maxTemp.setVisibility(View.VISIBLE);
-                            binding.minTemp.setText("The min temperature is " +  min);//Set the text for min temperature to visible
-                            binding.minTemp.setVisibility(View.VISIBLE);
-                            binding.humidity.setText("The humidity is " + humidity + "%");//Set the text for humidity to visible
-                            binding.humidity.setVisibility(View.VISIBLE);
-                            binding.icon.setImageBitmap(image);//Set the IMAGE for description to visible
-                            binding.icon.setVisibility(View.VISIBLE);
-                            binding.description.setText(description);//Set the text for description to visible
-                            binding.description.setVisibility(View.VISIBLE);
-                        });//runOnUiThread
+                            JSONObject coord = response.getJSONObject("coord");
+                            JSONArray weatherArray = response.getJSONArray("weather");
+                            JSONObject position0 = weatherArray.getJSONObject(0);
+                            String description = position0.getString("description");
+                            String iconName = position0.getString("icon");
+                            //String pathname = getFilesDir() + "/" + iconName + ".png";
+                            JSONObject mainObject = response.getJSONObject("main");
+                            double current = mainObject.getDouble("temp");
+                            double min = mainObject.getDouble("temp_min");
+                            double max = mainObject.getDouble("temp_max");
+                            int humidity = mainObject.getInt("humidity");
 
-                    }catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                        }, (error) -> { } );
+                            try {
+                                String pathname = getFilesDir() + "/" + iconName + ".png";
+                                File file = new File(pathname);
+                                if(file.exists())
+                                {
+                                    Bitmap image = BitmapFactory.decodeFile(pathname);
+                                }else {
+                                    ImageRequest imgReq = new ImageRequest("https://openweathermap.org/img/img/w/" + iconName + ".png", new Response.Listener<Bitmap>(){
+                                        @Override
+                                        public void onResponse(Bitmap bitmap) {
+                                            try {
+                                                image =  bitmap;
+                                                image.compress(Bitmap.CompressFormat.PNG, 100,
+                                                        MainActivity.this.openFileOutput(iconName + ".png", Activity.MODE_PRIVATE));
+                                                binding.icon.setImageBitmap(image);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }//end of catch block
+                                        } //end of onResponse
+                                    }, 1024, 1024, ImageView.ScaleType.CENTER, null, (error ) -> {
+                                        Toast.makeText(MainActivity.this, "" + error, Toast.LENGTH_SHORT).show();
+                                    });
+                                    queue.add(imgReq);
+                                }//end of else//Place the GUI code inside the {} so that the Main GUI Thread will run that code
+                            }//end of try for string path name
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }//end of catch for string path name
+                            runOnUiThread( () -> {
+                                //Set the text for temperature to visible
+                                binding.temp.setText("The current temperature is " + current);
+                                binding.temp.setVisibility(View.VISIBLE);
+                                binding.maxTemp.setText("The max temperature is " + max); //Set the text for max temperature to visible
+                                binding.maxTemp.setVisibility(View.VISIBLE);
+                                binding.minTemp.setText("The min temperature is " +  min);//Set the text for min temperature to visible
+                                binding.minTemp.setVisibility(View.VISIBLE);
+                                binding.humidity.setText("The humidity is " + humidity + "%");//Set the text for humidity to visible
+                                binding.humidity.setVisibility(View.VISIBLE);
+                                binding.icon.setImageBitmap(image);//Set the IMAGE for description to visible
+                                binding.icon.setVisibility(View.VISIBLE);
+                                binding.description.setText(description);//Set the text for description to visible
+                                binding.description.setVisibility(View.VISIBLE);
+                            });//runOnUiThread
+
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }, (error) -> { } );
             queue.add(request);
 
             //Toast message
