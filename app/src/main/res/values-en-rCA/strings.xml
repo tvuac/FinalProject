@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Final Project</string>
-    <string name="range">To View Nasa Pictures, Enter Date From 0 to 1000</string>
-    <string name="enter">Enter Date Here</string>
+    <string name="range">NASA Mars Rover Photos</string>
+    <string name="enter">Enter Date From 0 to 1000</string>
     <string name="search">search</string>
     <string name="favText">Favourite Images</string>
     <string name="delete">delete</string>
@@ -9,4 +9,5 @@
     <string name="favButton">View Favourites</string>
     <string name="namePlaceholder">Name goes here</string>
     <string name="save">save</string>
+    <string name="help">HELP</string>
 </resources>

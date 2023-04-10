@@ -19,13 +19,12 @@
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="@string/favText"
-        android:textSize="20sp"
-        android:textAlignment="center"
         android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/favText"
+        android:textAlignment="center"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/backToMain" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler"
@@ -34,16 +33,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backToMain" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <Button
         android:id="@+id/backToMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/backToMain"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

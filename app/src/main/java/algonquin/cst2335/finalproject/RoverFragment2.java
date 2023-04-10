@@ -31,7 +31,7 @@ import algonquin.cst2335.finalproject.databinding.RoverFragmentBinding;
         public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             super.onCreateView(inflater, container, savedInstanceState);
             RoverFragment2Binding binding = RoverFragment2Binding.inflate(getLayoutInflater());
-            RoverDatabase db = Room.databaseBuilder(getActivity(), RoverDatabase.class, "rovers").build();
+            RoverDatabase db = Room.databaseBuilder(getActivity(), RoverDatabase.class, "roverDatabase").build();
             rDAO = db.rDAO();
             binding.detailsName.setText(selected.getCameraName());
             binding.detailsURL.setText(selected.getImgURL());

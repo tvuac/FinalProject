@@ -39,8 +39,7 @@ public class NasaFavActivity extends AppCompatActivity {
         model = new ViewModelProvider(this).get(RoverModel.class);
         roverList = model.roverList.getValue();
         recyclerView = binding.recycler;
-
-        RoverDatabase db = Room.databaseBuilder(getApplicationContext(), RoverDatabase.class, "rovers").build();
+        RoverDatabase db = Room.databaseBuilder(getApplicationContext(), RoverDatabase.class, "roverDatabase").build();
         rDAO = db.rDAO();
         if (roverList == null) {
             model.roverList.postValue(roverList = new ArrayList<RoverItem>());
@@ -48,6 +47,8 @@ public class NasaFavActivity extends AppCompatActivity {
             thread.execute(() ->
             {
                 roverList.addAll(rDAO.getAllRovers());
+            });
+            runOnUiThread(()->{
                 recyclerView.setAdapter(myAdapter);
             });
         }
@@ -79,15 +80,6 @@ public class NasaFavActivity extends AppCompatActivity {
             Intent backToMain = new Intent(this, NasaActivity.class);
             startActivity(backToMain);
         });
-//        model.roverList.observe((this), (value) ->{
-//            model.roverList.postValue(roverList = new ArrayList<RoverItem>());
-//            Executor thread = Executors.newSingleThreadExecutor();
-//            thread.execute(() ->
-//            {
-//                roverList.addAll(rDAO.getAllRovers());
-//                recyclerView.setAdapter(myAdapter);
-//            });
-//        });
         binding.recycler.setLayoutManager(new LinearLayoutManager(this));
         binding.recycler.setAdapter(myAdapter = new RecyclerView.Adapter<MyRowHolder>() {
             @NonNull

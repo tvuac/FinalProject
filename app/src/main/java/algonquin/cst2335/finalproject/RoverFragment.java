@@ -28,7 +28,7 @@ public class RoverFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         RoverFragmentBinding binding = RoverFragmentBinding.inflate(getLayoutInflater());
-        RoverDatabase db = Room.databaseBuilder(getActivity(), RoverDatabase.class, "rovers").build();
+        RoverDatabase db = Room.databaseBuilder(getActivity(), RoverDatabase.class, "roverDatabase").build();
         rDAO = db.rDAO();
         binding.detailsName.setText(selected.getCameraName());
         binding.detailsURL.setText(selected.getImgURL());
@@ -42,7 +42,7 @@ public class RoverFragment extends Fragment {
             Toast.makeText(getActivity(), "Added to favourites", Toast.LENGTH_SHORT).show();
             Executor thread = Executors.newSingleThreadExecutor();
             thread.execute(() ->{
-                selected.setId((int)rDAO.insertRover(selected));
+                rDAO.insertRover(selected);
             });
         });
         return binding.getRoot();

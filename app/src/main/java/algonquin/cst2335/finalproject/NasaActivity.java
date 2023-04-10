@@ -1,6 +1,7 @@
 package algonquin.cst2335.finalproject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -147,6 +148,17 @@ public class NasaActivity extends AppCompatActivity {
                     Toast.makeText(this, "Please enter a number between 0 and 1000", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+        binding.help.setOnClickListener((clk) -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("This is a NASA Mars Rover photos application," +
+                    " you can type a date from 0 to 1000 into the input bar, then press search" +
+                    " to retrieve all photos from that day along with their information.\n\n" +
+                    "You can also click on any photo to see the entire photo along with more information " +
+                    "about the photo.\n\n" +
+                    "To view your saved photos, press favourites at the top left");
+            builder.setTitle("Help").
+                    setPositiveButton("Ok", (dialog, cl) -> {}).create().show();
         });
         class MyRowHolder extends RecyclerView.ViewHolder {
             TextView roverName;

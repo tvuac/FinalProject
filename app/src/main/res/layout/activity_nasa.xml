@@ -16,48 +16,58 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:text="@string/range"
+        android:textSize="20sp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="@+id/date"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-    </TextView>
+        app:layout_constraintTop_toBottomOf="@+id/fav"></TextView>
 
     <EditText
         android:id="@+id/date"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:hint="@string/enter"
         android:inputType="number"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/search"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"></EditText>
 
     <Button
         android:id="@+id/search"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_height="0dp"
         android:text="@string/search"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/fav"></Button>
+        app:layout_constraintBottom_toBottomOf="@+id/date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/date"></Button>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="664dp"
         android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search" />
+        app:layout_constraintTop_toBottomOf="@+id/date" />
 
     <Button
         android:id="@+id/fav"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
         android:text="@string/favButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/help"
+        android:layout_width="160dp"
+        android:layout_height="0dp"
+        android:text="@string/help"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
