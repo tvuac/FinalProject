@@ -3,10 +3,10 @@
     <string name="range">NASA Mars Rover Photos</string>
     <string name="enter">Enter Date From 0 to 1000</string>
     <string name="search">search</string>
-    <string name="favText">Favorite Images</string>
+    <string name="favText">Favourite Images</string>
     <string name="delete">delete</string>
     <string name="backToMain">Back</string>
-    <string name="favButton">View Favorites</string>
+    <string name="favButton">View Favourites</string>
     <string name="namePlaceholder">Name goes here</string>
     <string name="save">save</string>
     <string name="help">HELP</string>
