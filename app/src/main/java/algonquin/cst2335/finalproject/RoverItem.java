@@ -17,6 +17,8 @@ public class RoverItem {
     private String imgURL;
     @ColumnInfo(name="image")
     private Bitmap image;
+    @ColumnInfo(name="pathname")
+    private String pathname;
     @ColumnInfo(name="cameraName")
     private String cameraName;
 
@@ -27,6 +29,8 @@ public class RoverItem {
     }
     public int getId(){return id;}
     public void setId(int id){this.id=id;}
+    public void setPathname(String pathname){this.pathname = pathname;}
+    public String getPathname(){return pathname;}
     public String getRoverName(){
         return roverName;
     }

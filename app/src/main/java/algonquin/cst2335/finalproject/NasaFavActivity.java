@@ -1,6 +1,9 @@
 package algonquin.cst2335.finalproject;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +102,8 @@ public class NasaFavActivity extends AppCompatActivity {
                 RoverItem rover = roverList.get(position);
                 holder.roverName.setText(rover.getRoverName());
                 if (rover.getImage() != null) {
-                    holder.roverImage.setImageBitmap(rover.getImage());
+                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(rover.getPathname()), 100, 100);
+                    holder.roverImage.setImageBitmap(thumbnail);
                 }
             }
 

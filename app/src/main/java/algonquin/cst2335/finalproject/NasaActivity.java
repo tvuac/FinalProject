@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,6 +110,7 @@ public class NasaActivity extends AppCompatActivity {
                                                         String fileName = getFilename(tempURL);
                                                         try {
                                                             String pathname = getFilesDir() + "/" + fileName;
+                                                            tempItem.setPathname(pathname);
                                                             File file = new File(pathname);
                                                             if (file.exists()) {
                                                                 image = BitmapFactory.decodeFile(pathname);
@@ -185,7 +187,8 @@ public class NasaActivity extends AppCompatActivity {
                 RoverItem rover = roverList.get(position);
                 holder.roverName.setText(rover.getRoverName());
                 if (rover.getImage() != null) {
-                    holder.roverImage.setImageBitmap(rover.getImage());
+                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(rover.getPathname()), 100, 100);
+                    holder.roverImage.setImageBitmap(thumbnail);
                 }
             }
 
