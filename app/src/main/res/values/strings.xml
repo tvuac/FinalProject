@@ -6,4 +6,15 @@
     <string name="hint_text">Enter a city</string>
     <string name="city">City</string>
     <string name="date">Date</string>
-</resources>
+    <string name="app_name">Final Project</string>
+    <string name="range">NASA Mars Rover Photos</string>
+    <string name="enter">Enter Date From 0 to 1000</string>
+    <string name="search">search</string>
+    <string name="favText">Favorite Images</string>
+    <string name="delete">delete</string>
+    <string name="backToMain">Back</string>
+    <string name="favButton">View Favorites</string>
+    <string name="namePlaceholder">Name goes here</string>
+    <string name="save">save</string>
+    <string name="help">HELP</string>
+    </resources>
