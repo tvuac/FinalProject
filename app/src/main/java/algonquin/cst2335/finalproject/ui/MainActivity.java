@@ -224,9 +224,9 @@ public class MainActivity extends AppCompatActivity {
 
             try{
                 stringURL = new StringBuilder()
-                        .append("http://api.weatherstack.com/current?")
+                        .append("https://api.openweathermap.org/data/2.5/weather?q=")
                         .append(URLEncoder.encode(cityName, "UTF-8"))
-                        .append("access_key=e87d8a5264dced65b27d774df05664e7").toString(); //API key
+                        .append("&appid=7e943c97096a9784391a981c4d878b22&units=metric").toString(); //API key
             } catch(UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
