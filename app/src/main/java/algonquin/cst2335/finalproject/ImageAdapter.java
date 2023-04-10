@@ -1,12 +1,17 @@
 package algonquin.cst2335.finalproject;
 
+import static android.media.CamcorderProfile.get;
+
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -61,4 +66,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }
+
+
 }

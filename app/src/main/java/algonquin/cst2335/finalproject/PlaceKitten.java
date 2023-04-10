@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.os.Bundle;
 
 import com.android.volley.RequestQueue;
@@ -24,8 +25,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -33,13 +36,19 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 
 import algonquin.cst2335.finalproject.databinding.ActivityPlaceKittenBinding;
 
@@ -53,10 +62,10 @@ public class PlaceKitten extends AppCompatActivity implements ImageAdapter.ItemC
     RecyclerView recyclerView;
     ImageAdapter adapter;
     List<Bitmap> images;
+    List<ImageDetails> imageDetailsList;
 
-    ArrayList<String> favoriteUrls;
-    RecyclerView.Adapter myAdapter;
-    RecyclerView favoritesRecycler;
+    FavoritesDatabase favoritesDatabase;
+    ImageDetailsDao imageDetailsDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,18 +73,34 @@ public class PlaceKitten extends AppCompatActivity implements ImageAdapter.ItemC
         binding = ActivityPlaceKittenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         heightEditText = binding.heightText;
         widthEditText = binding.widthText;
         submitButton = binding.searchButton;
         kittenImageView = binding.kittenPicture;
         saveButton = binding.saveButton;
         recyclerView = binding.favoritesViewer;
+
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        if (imageDetailsList == null)
+        {
+            imageDetailsList = new ArrayList<ImageDetails>();
+        }
+        else
+        {
+            imageDetailsList = imageDetailsDao.getAll();
+        }
 
         images = new ArrayList<>();
         adapter = new ImageAdapter( images);
         adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
+
+        favoritesDatabase = Room.databaseBuilder(getApplicationContext(),
+                FavoritesDatabase.class, "my-db").build();
+        imageDetailsDao = favoritesDatabase.imageDetailsDao();
 
         submitButton.setOnClickListener(clk ->
         {
@@ -104,11 +129,26 @@ public class PlaceKitten extends AppCompatActivity implements ImageAdapter.ItemC
 
         saveButton.setOnClickListener(clk ->
         {
+            int height = Integer.parseInt(heightEditText.getText().toString());
+            int width = Integer.parseInt(widthEditText.getText().toString());
+
             BitmapDrawable drawable = (BitmapDrawable) kittenImageView.getDrawable();
             Bitmap bitmap = drawable.getBitmap();
             saveImage(bitmap);
             images.add(bitmap);
+
+            Date date = Calendar.getInstance().getTime();
+            String dateTime = date.toString();
+
+            Executor thread = Executors.newSingleThreadExecutor();
+            thread.execute( () -> {
+                ImageDetails imageDetails = new ImageDetails(width, height, dateTime);
+                imageDetailsDao.insert(imageDetails);
+                imageDetailsList.add(imageDetails);
+            });
+
             adapter.notifyDataSetChanged();
+            
         });
     }
 
@@ -131,9 +171,12 @@ public class PlaceKitten extends AppCompatActivity implements ImageAdapter.ItemC
     }
 
     @Override
-    public void onItemClick(View view, int position) {
+    public void onItemClick(View view, int position)
+    {
         Bitmap bitmap = images.get(position);
-        kittenImageView.setImageBitmap(bitmap);
+
     }
 
 }
+
+

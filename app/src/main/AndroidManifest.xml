@@ -15,9 +15,7 @@
         tools:targetApi="31">
         <activity
             android:name=".PlaceKitten"
-            android:exported="true"
-            android:label="@string/title_activity_place_kitten"
-            android:theme="@style/Theme.FinalProject.NoActionBar">
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
